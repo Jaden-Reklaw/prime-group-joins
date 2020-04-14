@@ -1,6 +1,5 @@
 -- Base Mode
 
--- 0. Get all the users
 SELECT * FROM customers;
 
 -- 1.) Get all customers and their addresses.
@@ -24,7 +23,10 @@ JOIN products ON warehouse_product.product_id = products.id
 WHERE products.description = 'diet pepsi';
 
 -- 5.) Get the number of orders for each customer. NOTE: It is OK if those without orders are not included in results.
-SELECT SUM(orders.address_id), customers.id FROM customers
+SELECT customers.first_name, customers.last_name , COUNT(orders.address_id) FROM orders
+JOIN addresses ON addresses.customer_id = orders.address_id
+JOIN customers ON customers.id = addresses.customer_id
+GROUP BY customers.first_name, customers.last_name;
 
 
 -- 6.) How many customers do we have?
@@ -36,6 +38,7 @@ SELECT COUNT(products.id) as number_of_products FROM products;
 -- 8.) What is the total available on-hand quantity of diet pepsi?
 SELECT description, SUM(warehouse_product.on_hand) FROM warehouse_product
 JOIN products ON products.id = warehouse_product.product_id
+WHERE products.description = 'diet pepsi'
 GROUP BY products.description;
 
 -- Stretch Mode
